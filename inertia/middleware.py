@@ -1,12 +1,16 @@
 from .settings import settings
 from django.contrib import messages
 from django.http import HttpResponse
+from django.middleware.csrf import get_token
 
 class InertiaMiddleware:
   def __init__(self, get_response):
     self.get_response = get_response
   
   def __call__(self, request):
+    # This sets up the CSRF token cookie
+    get_token(request)
+
     response = self.get_response(request)
 
     if not self.is_inertia_request(request):
